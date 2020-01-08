@@ -1,0 +1,26 @@
+
+
+  <h1>Dylike's delightful train station</h1>
+
+  <h3>Dylike stations</h3>
+
+  <% if @cities.any? %>
+  <ul>
+    <% @cities.sort_by(&:name).each do |city| %>
+    <li><a href="/cities/<%= city.id %>"><%= city.name %>, <%= city.status %></a></li>
+    <% end %>
+  </ul>
+  <% else %>
+  <p>There are currently no stations available.</p>
+  <% end %>
+
+  <a href="/cities/new">Add a New City</a>
+  <form action="/cities/search/" method="get">
+    <div class="form-group">
+      <label for="searched">Search</label>
+      <input id="searched" name="searched" class="form-control" type="text">
+    </div>
+    <button type="submit">Go!</button>
+  </form>
+
+  <a href="/trains/new">Add a New Train</a>

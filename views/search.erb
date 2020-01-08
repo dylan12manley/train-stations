@@ -1,0 +1,12 @@
+<h2>Search Results</h2>
+    <% if @train != nil %>
+    <ul>
+      <% @train.sort.each do |train| %>
+      <li><a href="/trains/<%= train.id %>"><%= train.name %></a></li>
+      <% end %>
+    </ul>
+    <% else %>
+    <p>There are currently no records to display.</p>
+    <% end %>
+
+    <a href="/trains">Return to Train List</a>
