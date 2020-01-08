@@ -25,7 +25,7 @@ end
 
 post('/cities') do
   name = params[:city_name]
-  city = City.new(name, nil, nil)
+  city = City.new({:name => name, :id => id, :train_id => train_})
   city.save()
   @cities = City.all
   erb(:cities)
@@ -72,7 +72,7 @@ end
 
 post '/trains' do
   name = params[:train_name]
-  train = Train.new({:name => name, :id => nil, :city_id => nil)}
+  train = Train.new({:name => name, :id => nil, :city_id => nil})
   train.save
   @trains = Train.all
   erb(:trains)
