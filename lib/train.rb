@@ -1,5 +1,6 @@
 class Train
-  attr_reader :name, :id, :city_id
+  attr_reader :id
+  attr_accessor :name, :city_id
 
 
   def initialize(attributes)
@@ -38,7 +39,7 @@ class Train
     train = DB.exec("SELECT * FROM trains WHERE id = #{id};").first
     name = train.fetch("name")
     id = train.fetch("id").to_i
-    city_id = train.fetch("city_id").to_i
+    city_id = train.fetch("city_id")
     Train.new({:name => name, :id => id, :city_id => city_id})
   end
 

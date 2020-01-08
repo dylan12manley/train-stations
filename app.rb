@@ -25,10 +25,15 @@ end
 
 post('/cities') do
   name = params[:city_name]
-  city = City.new({:name => name, :id => id, :train_id => train_})
+  city = City.new(:name => name, :id => nil, :train_id => nil)
   city.save()
   @cities = City.all
   erb(:cities)
+end
+
+get('/cities/:id') do
+  @city = City.find(params[:id].to_i())
+  erb(:city)
 end
 
 get('/cities/:id/edit') do
@@ -43,7 +48,7 @@ patch('/cities/:id') do
     erb(:cities)
   else
     @city = City.find(params[:id].to_i())
-    @city.update(params[:name], params[:train_id])
+    @city.update(params[:name])
     @cities = City.all
     erb(:city)
   end
@@ -55,6 +60,16 @@ delete('/cities/:id') do
   @cities = City.all
   erb(:cities)
 end
+
+post('/cities/:id/trains') do
+  @city = City.find(params[:id].to_i())
+  params[:city_id] = params[:id]
+  params[:train_name] = params[:name]
+  train = Train.new(params)
+  train.save()
+  erb(:city)
+end
+
 
 get('/cities/search/') do
   @city = City.search(params[:searched])

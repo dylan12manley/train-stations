@@ -22,7 +22,7 @@ class City
   end
 
   def save
-    result = DB.exec("INSERT INTO cities (name) VALUES ('#{@name}') RETURNING id;")
+    result = DB.exec("INSERT INTO cities (name) VALUES ('#{@name}', #{@train_id}) RETURNING id;")
     @id = result.first().fetch("id").to_i
   end
 
@@ -38,7 +38,7 @@ class City
     city = DB.exec("SELECT * FROM cities WHERE id = #{id};").first
     name = city.fetch("name")
     id = city.fetch("id").to_i
-    train_id = city.fetch("train_id").to_i
+    train_id = city.fetch("train_id")
     City.new({:name => name, :id => id, :train_id => train_id})
   end
 
@@ -53,10 +53,6 @@ class City
       end
       cities
     end
-
-  def songs
-    Song.find_by_city(self.id)
-  end
 
   def update(name)
     @name = name
