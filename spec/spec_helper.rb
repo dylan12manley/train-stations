@@ -4,7 +4,7 @@ require 'city'
 require 'train'
 require 'pry'
 
-DB = PG.connect({:dbname => 'record_store_test'})
+DB = PG.connect({:dbname => 'train_station_test'})
 
 RSpec.configure do |config|
   config.after(:each) do

@@ -1,65 +1,69 @@
-class Album
-  attr_reader :id, :name
+class Train
+  attr_reader :name, :id, :city_id
 
 
   def initialize(attributes)
-    @id = attributes.fetch(:id)
     @name = attributes.fetch(:name)
+    @id = attributes.fetch(:id)
+    @city_id = attributes.fetch(:city_id)
   end
 
 
   def self.all
-    returned_albums = DB.exec("SELECT * FROM albums;")
-    albums = []
-    returned_albums.each() do |album|
-      name = album.fetch("name")
-      id = album.fetch("id").to_i
-      albums.push(Album.new({:name => name, :id => id}))
+    returned_trains = DB.exec("SELECT * FROM trains;")
+    trains = []
+    returned_trains.each() do |train|
+      name = train.fetch("name")
+      id = train.fetch("id").to_i
+      city_id = train.fetch("city_id").to_i
+      trains.push(Train.new({:name => name, :id => id, :city_id => city_id}))
     end
-    albums
+    trains
   end
 
   def save
-    result = DB.exec("INSERT INTO albums (name) VALUES ('#{@name}') RETURNING id;")
+    result = DB.exec("INSERT INTO trains (name) VALUES ('#{@name}') RETURNING id;")
     @id = result.first().fetch("id").to_i
   end
 
-  def ==(album_to_compare)
-    self.name().downcase().eql?(album_to_compare.name.downcase())
+  def ==(train_to_compare)
+    self.name().downcase().eql?(train_to_compare.name.downcase())
   end
 
   def self.clear
-    DB.exec("DELETE FROM albums *;")
+    DB.exec("DELETE FROM trains *;")
   end
 
   def self.find(id)
-    album = DB.exec("SELECT * FROM albums WHERE id = #{id};").first
-    name = album.fetch("name")
-    id = album.fetch("id").to_i
-    Album.new({:name => name, :id => id})
+    train = DB.exec("SELECT * FROM trains WHERE id = #{id};").first
+    name = train.fetch("name")
+    id = train.fetch("id").to_i
+    city_id = train.fetch("city_id").to_i
+    Train.new({:name => name, :id => id, :city_id => city_id})
   end
 
-    def self.search(album_name)
-      albums = []
-      returned_albums = DB.exec("SELECT * FROM albums WHERE name LIKE '#{album_name}%';")
-      returned_albums.each() do |album|
-        name = album.fetch("name")
-        id = album.fetch("id").to_i
-        albums.push(Album.new({:name => name, :id => id}))
+    def self.search(train_name)
+      trains = []
+      returned_trains = DB.exec("SELECT * FROM trains WHERE name LIKE '#{train_name}%';")
+      returned_trains.each() do |train|
+        name = train.fetch("name")
+        id = train.fetch("id").to_i
+        city_id = train.fetch("city_id").to_i
+        trains.push(Train.new({:name => name, :id => id, :city_id => city_id}))
       end
-      albums
+      trains
     end
 
   def songs
-    Song.find_by_album(self.id)
+    Song.find_by_train(self.id)
   end
 
   def update(name)
     @name = name
-    DB.exec("UPDATE albums SET name = '#{@name}' WHERE id = #{@id};")
+    DB.exec("UPDATE trains SET name = '#{@name}' WHERE id = #{@id};")
   end
 
   def delete
-  DB.exec("DELETE FROM albums WHERE id = #{@id};")
+  DB.exec("DELETE FROM trains WHERE id = #{@id};")
 end
 end
