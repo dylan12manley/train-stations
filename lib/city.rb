@@ -22,7 +22,7 @@ class City
   end
 
   def save
-    result = DB.exec("INSERT INTO cities (name) VALUES ('#{@name}', #{@train_id}) RETURNING id;")
+    result = DB.exec("INSERT INTO cities (name) VALUES ('#{@name}') RETURNING id;")
     @id = result.first().fetch("id").to_i
   end
 
@@ -54,12 +54,24 @@ class City
       cities
     end
 
-  def update(name)
-    @name = name
-    DB.exec("UPDATE cities SET name = '#{@name}' WHERE id = #{@id};")
-  end
+    def update(attributes)
+      if (attributes.has_key?(:name)) && (attributes.fetch(:name) != nil)
+        @name = attributes.fetch(:name)
+        DB.exec("UPDATE cities SET name = '#{@name}' WHERE id = #{@id};")
+      end
+      train_id = attributes.fetch(:train_id)
+      if train_id != nil
+        trains = DB.exec("SELECT * FROM trains WHERE city_id = #{@id};")
+        DB.exec("UPDATE trains_cities SET train_id = #{@train.id} WHERE id = #{@id};")
+        if train != nil
+          DB.exec("INSERT INTO trains_cities (city_id, train_id) VALUES (#{city['id'].to_i}, #{@id});")
+      end
+    end
 
   def delete
+    DB.exec("DELETE FROM trains_cities WHERE train_id = #{@id};")
   DB.exec("DELETE FROM cities WHERE id = #{@id};")
+  # add line
+end
 end
 end

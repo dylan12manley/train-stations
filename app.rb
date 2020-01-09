@@ -63,10 +63,12 @@ end
 
 post('/cities/:id/trains') do
   @city = City.find(params[:id].to_i())
-  params[:city_id] = params[:id]
-  params[:train_name] = params[:name]
-  train = Train.new(params)
-  train.save()
+  city_id = params[:city_id]
+  name = params[:train_name]
+  id = params[:id]
+  @train = Train.new({:name => name, :id => nil, :city_id => city_id})
+  @train.save()
+  @city.update(:train_id => id)
   erb(:city)
 end
 
@@ -88,7 +90,7 @@ end
 post '/trains' do
   name = params[:train_name]
   train = Train.new({:name => name, :id => nil, :city_id => nil})
-  train.save
+  train.save()
   @trains = Train.all
   erb(:trains)
 end
